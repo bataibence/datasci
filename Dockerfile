@@ -5,4 +5,4 @@ EXPOSE 8000
 
 RUN pip3 install -r requirements.txt
 
-CMD streamlit run app.py –server.port 8000
+CMD streamlit run app.py --server.port=8000
