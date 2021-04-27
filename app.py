@@ -4,13 +4,15 @@ import plotly.express as px
 import plotly.graph_objects as go
 import time
 
-data = pd.read_csv('data/csv')
+@st.cache
+def load_data():
+    data = pd.read_csv('https://opendata.ecdc.europa.eu/covid19/nationalcasedeath/csv')
+    data['week'] = data.year_week.apply(lambda x: convert(x))
+    return data
 
-st.title("Hello world!")
+st.title("COVID-19 data")
 
-st.write("Again")
-
-country = st.selectbox("Select a country", ["Hungary", "Belgium"])
+country = st.sidebar.selectbox("Select a country", "{country}")
 st.write(f"The selected country is {country}")
 
 def convert(x):
@@ -18,11 +20,11 @@ def convert(x):
     year = (int(year) - 2020) * 54
     return year + int(week)
     
-data['week'] = data.year_week.apply(lambda x: convert(x))
-    
-hun = data[data.country == 'Hungary']
+data = load_data()
 
-fig = px.line(data_frame = hun, x = 'week', y = 'cumulative_count', color = 'indicator', )
+selected_country = data[data.country == {country}]
+
+fig = px.line(data_frame = selected_country, x = 'week', y = 'cumulative_count', color = 'indicator', )
 
 st.plotly_chart(fig)
 
