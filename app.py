@@ -14,16 +14,16 @@ def convert(x):
 
 
 def load_data():
-    data = pd.read_csv('COVID_data')
+    data = pd.read_csv('https://opendata.ecdc.europa.eu/covid19/nationalcasedeath/csv')
     data['week'] = data.year_week.apply(lambda x: convert(x))
     return data
 data = load_data()
 
-st.title("COVID-19 data")
+st.title("COVID-19 data by country")
 
 country_select = st.sidebar.selectbox("Select a country", data['country'].unique())
 selected_country = data[data['country'] == country_select]
-st.write(f"The selected country is {selected_country}")
+st.write(f"The selected country is", country_select)
 
 fig = px.line(data_frame = selected_country, x = 'week', y = 'cumulative_count', color = 'indicator')
 
